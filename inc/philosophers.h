@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/09 18:54:37 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/09 19:38:02 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 # include <errno.h>
 # include <sys/wait.h>
 # include "libft/libft.h"
-
-
+# include <sys/time.h>
 
 #endif
 

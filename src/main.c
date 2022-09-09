@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/09 19:19:30 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/09 20:14:40 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,32 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
 
 {
     int i = 0;
+    int sec = 0;
+    int sec2 = 0;
+    struct timeval tp1;
+    struct timeval tp2;
 
-    //think
+    gettimeofday(&tp1, NULL);
+    usleep(2000);
+    gettimeofday(&tp2, NULL);
     //eat - only with 2 forks
+    //think
     //sleep
 
-    //forks = philosophers
 
+    //forks = philosophers
+    
 //   timestamp_in_ms X has taken a fork ◦ timestamp_in_ms X is eating
 // ◦ timestamp_in_ms X is sleeping
 // ◦ timestamp_in_ms X is thinking
 // ◦ timestamp_in_ms X died died - should be displayed no more than 10 ms
-    
-    printf("YO!\n");
+    // printf("time:%d\n", sec);
+    // printf("time:%d\n", sec2);
+    // printf("time:%d\n", tp1.tv_sec /365/24/60/60);
+    // printf("time:%d\n", tp2.tv_sec /365/24/60/60);
+    // printf("time:%d\n", (tp2.tv_sec - tp1.tv_sec) / 1000);
+
+    printf("%d seconds and ", (tp2.tv_sec - tp1.tv_sec));
+    printf("%d milliseconds\n", (tp2.tv_usec - tp1.tv_usec) / 1000);
     return 0;
 }
