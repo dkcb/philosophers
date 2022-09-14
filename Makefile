@@ -6,7 +6,7 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/09 18:49:54 by dkocob        #+#    #+#                  #
-#    Updated: 2022/09/09 19:34:06 by dkocob        ########   odam.nl          #
+#    Updated: 2022/09/14 17:58:50 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ VPATH		= ./obj:./src:./inc/libft:
 SRC			= main.c
 OBJ			= $(SRC:.c=.o)
 NAME		= philo
-CFLAGS		= -Wall -Wextra -g -fsanitize=address #-Werror 
+CFLAGS		= -Wall -Wextra -g -pthread -fsanitize=address #-Werror 
 
 all:		$(NAME)
 

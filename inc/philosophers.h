@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/09 19:38:02 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/14 17:58:03 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,48 @@
 # include <sys/wait.h>
 # include "libft/libft.h"
 # include <sys/time.h>
+# include <pthread.h>
+
+struct s_fork
+{
+    int taken;
+};
+
+struct s_time
+{
+    struct timeval since;
+    struct timeval last;
+    int taken;
+    int begin;
+    int end;
+};
+
+struct s_arms
+{
+    struct s_fork left;
+    struct s_fork right;
+};
+
+struct s_activity
+{
+    int taken_a_fork;
+    int is_eating;
+    int is_sleeping;
+    int is_thinking;
+    int died;
+    struct s_time t_eat;
+    struct s_time t_think;
+    struct s_time t_sleep;
+};
+struct s_philosopher
+{
+
+    struct s_fork forks;
+    struct s_arms arms;
+    struct s_activity act;
+    struct s_time dead;
+    
+};
 
 #endif
 
