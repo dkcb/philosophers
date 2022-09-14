@@ -6,14 +6,16 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/14 19:45:07 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/14 21:50:59 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-void ft_phil_init(struct s_philosopher *phil)
+
+void ft_phil_init(struct s_philosopher *phil, pthread_mutex_t *mutex)
 {
+    phil->mutex = mutex;
     phil->arms.left.taken = 1;
     phil->arms.right.taken = 0;
     phil->act.died = 0;
@@ -34,12 +36,24 @@ void* ft_print_yo(void *val)
 
 void *ft_phil_state(void *val)
 {
-    struct s_philosopher *phil = (struct s_philosopher *)val;
-    printf("is died:%d | ", phil->act.died);
-    printf("%d fork in left ", phil->arms.left.taken);
-    printf("and %d in the right arm \n", phil->arms.right.taken);
+    struct s_philosopher *philo = (struct s_philosopher *)val;
+    pthread_mutex_lock(philo->mutex);
+    printf("is died:%d | ", philo->act.died);
+    printf("%d fork in left ", philo->arms.left.taken);
+    printf("and %d in the right arm \n", philo->arms.right.taken);
+    pthread_mutex_unlock(philo->mutex);
 
 }
+// void *ft_phil_state(void *val, void *mutex)
+// {
+//     struct s_philosopher *phil = (struct s_philosopher *)val;
+//     pthread_mutex_lock(&mutex);
+//     printf("is died:%d | ", phil->act.died);
+//     printf("%d fork in left ", phil->arms.left.taken);
+//     printf("and %d in the right arm \n", phil->arms.right.taken);
+//     pthread_mutex_unlock(&mutex);
+
+// }
 
 //Philosophers with threads and mutexes
 
@@ -61,11 +75,17 @@ int main () //number_of_philosophers time_to_die time_to_eat time_to_sleep [numb
     // int sec = 0;
     // int sec2 = 0;
     int number_of_philosophers = 5;
-    pthread_t t1;
     pthread_mutex_t mutex;
+    pthread_t t1;
     struct timeval tp1;
     struct timeval tp2;
+    struct s_data data;
     struct s_philosopher phil[number_of_philosophers];
+
+    data.philo = &phil;
+
+    // data.philo = malloc(sizeof(struct s_philosopher) * number_of_philosophers);
+
 
     pthread_mutex_init(&mutex, NULL);
     gettimeofday(&tp1, NULL);
@@ -73,7 +93,7 @@ int main () //number_of_philosophers time_to_die time_to_eat time_to_sleep [numb
     // phil[3] = NULL;
     while (i < number_of_philosophers)
     {
-        ft_phil_init(&phil[i]);
+        ft_phil_init(&phil[i], &mutex);
         i++;
     }
     i = 0;

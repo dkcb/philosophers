@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/14 17:58:03 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/14 21:47:02 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,17 @@ struct s_philosopher
     struct s_arms arms;
     struct s_activity act;
     struct s_time dead;
+    pthread_mutex_t *mutex;
     
 };
+
+struct s_data
+{
+
+    struct s_philosopher *philo;
+    
+};
+
 
 #endif
 
