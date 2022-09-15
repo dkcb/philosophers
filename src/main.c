@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/15 21:01:39 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/15 21:12:42 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,22 @@ void ft_phil_init(struct s_philosopher *phil, pthread_mutex_t *mutex, int name, 
 }
 void    take_fork(struct s_philosopher *philo)
 {
+    printf("taking fork\n");
     if (philo->arms.left.fork == 0)
     {
+        printf("to left hand\n");
         philo->arms.left.fork = 1;
         gettimeofday(&philo->arms.left.take, NULL);
+        printf(" %ld s %d ms - Philosopher %d has taken a fork\n", philo->arms.left.take.tv_sec, philo->arms.left.take.tv_usec, philo->name);
     }
-    else if(philo->arms.left.fork == 0)
+    else if(philo->arms.right.fork == 0)
     {
         philo->arms.right.fork = 1;
+        printf("to right hand\n");
         gettimeofday(&philo->arms.right.take, NULL);
+        printf(" %ld s %d ms - Philosopher %d has taken a fork\n", philo->arms.right.take.tv_sec, philo->arms.right.take.tv_usec, philo->name);
     }
-    pthread_mutex_lock(philo->mutex);
-    printf(" %ld %d has taken a fork\n", philo->arms.left.take.tv_sec, philo->name);
+    // pthread_mutex_lock(philo->mutex);
 }
 void    put_forks(struct s_philosopher *philo)
 {
@@ -57,10 +61,11 @@ void    ft_eat(struct s_philosopher *philo)
 {
     while(philo->act.is_eating == 0 && (philo->arms.left.fork == 0 || philo->arms.right.fork == 0))
     {
+        printf("waiting for fork\n");
         take_fork(philo);
     }
     gettimeofday(&philo->act.t_eat.start_at, NULL);
-    printf(" %ld %d is eating\n", philo->act.t_eat.start_at.tv_sec, philo->name);
+    printf(" %ld s %d ms - philosopher %d is eating\n", philo->act.t_eat.start_at.tv_sec, philo->act.t_eat.start_at.tv_usec, philo->name);
     usleep(philo->time_to_eat);
     put_forks(philo);
     gettimeofday(&philo->act.t_eat.stop_at, NULL);
@@ -105,10 +110,12 @@ void    ft_routine(struct s_philosopher *philo)
 //     // pthread_mutex_unlock(&mutex);
 // }
 
-void *ft_phil_state(void *val)
+// void *ft_phil_state(void *val)
+void *ft_phil_routine(void *val)
 {
     struct s_philosopher *philo = (struct s_philosopher *)val;
 
+    ft_eat(philo);
     printf("Philosopher[%d] is died:%d | has forks:%d\n", philo->name, philo->act.died, philo->arms.left.fork + philo->arms.right.fork);
     return (0);
 }
@@ -157,7 +164,7 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
     while (i < number_of_philosophers - 1)
     {
 
-        if (pthread_create(&threads[i], NULL, &ft_phil_state, &phil[i]) != 0)
+        if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
         {
             perror("thread creation fails!\n");
             return (1);
