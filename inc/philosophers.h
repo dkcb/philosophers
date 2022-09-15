@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/14 21:47:02 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/09/15 20:40:50 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@
 
 struct s_fork
 {
-    int taken;
+    int fork;
+    struct timeval take;
+    struct timeval put;
 };
 
 struct s_time
 {
-    struct timeval since;
-    struct timeval last;
-    int taken;
-    int begin;
-    int end;
+    struct timeval start_at;
+    struct timeval stop_at;
+    // int prev_begin;
+    // int prev_end;
 };
 
 struct s_arms
@@ -55,7 +56,11 @@ struct s_activity
 };
 struct s_philosopher
 {
-
+    int name;
+    int time_to_eat;
+    int time_to_sleep;
+    int time_to_die;
+    int meals_total;
     struct s_fork forks;
     struct s_arms arms;
     struct s_activity act;
@@ -68,7 +73,7 @@ struct s_data
 {
 
     struct s_philosopher *philo;
-    
+    struct s_fork *fork;
 };
 
 

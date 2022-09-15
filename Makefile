@@ -6,12 +6,12 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/09 18:49:54 by dkocob        #+#    #+#                  #
-#    Updated: 2022/09/14 17:58:50 by dkocob        ########   odam.nl          #
+#    Updated: 2022/09/15 20:29:33 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 VPATH		= ./obj:./src:./inc/libft:
-SRC			= main.c
+SRC			= main.c ft_atoi.c
 OBJ			= $(SRC:.c=.o)
 NAME		= philo
 CFLAGS		= -Wall -Wextra -g -pthread -fsanitize=address #-Werror 
@@ -22,7 +22,7 @@ $(NAME):	$(OBJ)
 			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 run:		$(NAME)
-			./$(NAME)
+			./$(NAME) 2 3 4 5 6 7
 clean:
 			rm -f $(OBJ)
 
