@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/10/10 18:07:03 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/10/10 20:25:55 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int time_print_diff(struct timeval *time_from_start, struct timeval *time_current)
 {
-    printf("%02ld:%02d ", time_current->tv_sec - time_from_start->tv_sec, (time_current->tv_usec - time_from_start->tv_usec)/1000);
+    printf("%02ld:%002d ", time_current->tv_sec - time_from_start->tv_sec, time_current->tv_usec/1000);
     return (0);
 }
 
@@ -45,9 +45,6 @@ void    take_fork(struct s_philosopher *philo)
         printf(" Philo %d taking fork ", philo->index);
         printf("to left hand\n");
         philo->arms.left.fork = 1;
-        gettimeofday(&philo->arms.left.take, NULL);
-        time_print_diff(philo->time_from_start, &philo->arms.left.take);
-        printf(" Philo %d taking a fork\n", philo->index);
     }
     else if(philo->arms.right.fork == 0)
     {
@@ -77,45 +74,40 @@ void    ft_eat(struct s_philosopher *philo)
     }
     gettimeofday(&philo->act.t_eat.start_at, NULL);
     time_print_diff(philo->time_from_start, &philo->act.t_eat.start_at);
-    printf(" philo %d is eating\n", philo->index);
-    usleep(philo->time_to_eat);
+    printf(" philo %d is start eating\n", philo->index);
+    sleep(philo->time_to_eat);
     put_forks(philo);
     gettimeofday(&philo->act.t_eat.stop_at, NULL);
-
+    time_print_diff(philo->time_from_start, &philo->act.t_eat.stop_at);
+    printf(" philo %d stop eating\n", philo->index);
 }
 
 void    ft_think(struct s_philosopher *philo)
 {
-    if (!philo->act.is_thinking)
-    {
-        
-    }
+    gettimeofday(&philo->time_current, NULL);
+    time_print_diff(philo->time_from_start, &philo->time_current);
+    printf(" Philo %d is thinking ", philo->index);
 }
 
 void    ft_sleep(struct s_philosopher *philo)
 {
-    if (!philo->act.is_sleeping)
-    {
-        
-    }
+    gettimeofday(&philo->time_current, NULL);
+    time_print_diff(philo->time_from_start, &philo->time_current);
+    printf(" Philo %d is sleeping ", philo->index);
+    sleep(philo->time_to_sleep);
 }
 
-
-void    ft_routine(struct s_philosopher *philo)
+void    ft_check_death(struct s_philosopher *philo)
 {
-    if (!philo->act.is_eating)
+    gettimeofday(&philo->time_current, NULL);
+    if (philo->time_current.tv_sec + philo->time_current.tv_sec / 1000 - philo->act.t_eat.stop_at.tv_sec - philo->act.t_eat.stop_at.tv_usec / 1000 >= philo->time_to_die)
     {
-        
-    }
-    else if (!philo->act.is_sleeping)
-    {
-
-    }
-    else if (!philo->act.is_thinking)
-    {
-        
+        time_print_diff(philo->time_from_start, &philo->time_current);
+        printf(" Philo %d died ", philo->index);
+        philo->dead = 1;
     }
 }
+
 
 // void ft_print_yo(void *val)
 // {
@@ -129,16 +121,20 @@ void *ft_phil_routine(void *val)
 {
     struct s_philosopher *philo = (struct s_philosopher *)val;
 
-    if (philo->act.is_eating == 0)
-        ft_eat(philo);
-    else if (philo->act.is_thinking == 0)
-        ft_think(philo);
-    else if (philo->act.is_sleeping == 0)
-        ft_sleep(philo);
-    printf("\n-- Philosopher[%d] is died:%d | has forks:%d --\n\n", philo->index, philo->act.died, philo->arms.left.fork + philo->arms.right.fork);
-    if (philo->act.died == 1)
-        exit (0);
-    return (0);
+    while (1)
+    {
+        if (philo->act.is_eating == 0)
+            ft_eat(philo);
+        else if (philo->act.is_thinking == 0)
+            ft_think(philo); 
+        else if (philo->act.is_sleeping == 0)
+            ft_sleep(philo);
+        printf("\n-- Philosopher[%d] is died:%d | has forks:%d --\n\n", philo->index, philo->act.died, philo->arms.left.fork + philo->arms.right.fork);
+        if (philo->act.died == 1)
+            exit (0);
+    }
+    return (NULL);
+    // return (0);
 }
 // void *ft_phil_state(void *val, void *mutex)
 // {
@@ -183,23 +179,22 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
         i++;
     }
     i = 0;
-    while (i < number_of_philosophers)
+    // while (1)
+    // {
+        while (i < number_of_philosophers)
+        {
+            if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
+            {
+                perror("thread creation fails!\n");
+                return (1);
+            }
+            i++;
+        }
+    while (pthread_join(threads[0], NULL) != 0)
     {
-        if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
-        {
-            perror("thread creation fails!\n");
-            return (1);
-        }
-        if (pthread_join(threads[i], NULL) != 0)
-        {
-            perror("thread join fails!\n");
-            return (2);
-        }
-        i++;
+        perror("thread join fails!\n");
+        return (2);
     }
-    // eat - only with 2 forks
-    // think
-    // sleep
     pthread_mutex_destroy(&mutex);
     return 0;
 }
