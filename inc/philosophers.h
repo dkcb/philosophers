@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/09/15 20:40:50 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/10/10 17:05:04 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ struct s_activity
 };
 struct s_philosopher
 {
-    int name;
+    int index;
     int time_to_eat;
     int time_to_sleep;
     int time_to_die;
@@ -65,15 +65,16 @@ struct s_philosopher
     struct s_arms arms;
     struct s_activity act;
     struct s_time dead;
+    struct timeval *time_from_start;
+    struct timeval time_current;
     pthread_mutex_t *mutex;
-    
 };
 
 struct s_data
 {
-
     struct s_philosopher *philo;
     struct s_fork *fork;
+    struct timeval time_from_start;
 };
 
 
