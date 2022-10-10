@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/10/10 17:11:38 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/10/10 18:07:03 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,15 @@ void    ft_eat(struct s_philosopher *philo)
     usleep(philo->time_to_eat);
     put_forks(philo);
     gettimeofday(&philo->act.t_eat.stop_at, NULL);
+
+}
+
+void    ft_think(struct s_philosopher *philo)
+{
+    if (!philo->act.is_thinking)
+    {
+        
+    }
 }
 
 void    ft_sleep(struct s_philosopher *philo)
@@ -91,13 +100,6 @@ void    ft_sleep(struct s_philosopher *philo)
     }
 }
 
-void    ft_think(struct s_philosopher *philo)
-{
-    if (!philo->act.is_sleeping)
-    {
-        
-    }
-}
 
 void    ft_routine(struct s_philosopher *philo)
 {
@@ -127,8 +129,15 @@ void *ft_phil_routine(void *val)
 {
     struct s_philosopher *philo = (struct s_philosopher *)val;
 
-    ft_eat(philo);
-    printf("-- Philosopher[%d] is died:%d | has forks:%d --\n\n", philo->index, philo->act.died, philo->arms.left.fork + philo->arms.right.fork);
+    if (philo->act.is_eating == 0)
+        ft_eat(philo);
+    else if (philo->act.is_thinking == 0)
+        ft_think(philo);
+    else if (philo->act.is_sleeping == 0)
+        ft_sleep(philo);
+    printf("\n-- Philosopher[%d] is died:%d | has forks:%d --\n\n", philo->index, philo->act.died, philo->arms.left.fork + philo->arms.right.fork);
+    if (philo->act.died == 1)
+        exit (0);
     return (0);
 }
 // void *ft_phil_state(void *val, void *mutex)
@@ -155,27 +164,27 @@ void *ft_phil_routine(void *val)
 
 int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
 {
-    int                     number_of_philosophers = ft_atoi(argv[2]);
+    int                     number_of_philosophers = ft_atoi(argv[1]);
     struct s_philosopher    phil[number_of_philosophers];
     pthread_t               threads[number_of_philosophers];
     pthread_mutex_t         mutex;
     struct s_data           data;
     int                     i = 0;
 
+    // printf ("i:%d \n", number_of_philosophers);
     gettimeofday(&data.time_from_start, NULL);
     if (argc < 3)
         return (write(2, "Wrong arguments!\n", 17));
     data.philo = phil;
     pthread_mutex_init(&mutex, NULL);
-    while (i < number_of_philosophers - 1)
+    while (i < number_of_philosophers)
     {
         ft_phil_init(&data.philo[i], &mutex, i, argv, &data.time_from_start);
         i++;
     }
     i = 0;
-    while (i < number_of_philosophers - 1)
+    while (i < number_of_philosophers)
     {
-
         if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
         {
             perror("thread creation fails!\n");

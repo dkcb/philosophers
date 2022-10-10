@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/10/10 17:05:04 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/10/10 17:53:18 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ struct s_data
     struct s_fork *fork;
     struct timeval time_from_start;
 };
-
 
 #endif
 

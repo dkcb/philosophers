@@ -6,7 +6,7 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/09 18:49:54 by dkocob        #+#    #+#                  #
-#    Updated: 2022/09/15 20:29:33 by dkocob        ########   odam.nl          #
+#    Updated: 2022/10/10 17:24:36 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ $(NAME):	$(OBJ)
 			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 run:		$(NAME)
-			./$(NAME) 2 3 4 5 6 7
+			./$(NAME) 3 3 4 5 6 7
 clean:
 			rm -f $(OBJ)
 
