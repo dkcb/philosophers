@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/18 21:05:14 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/18 21:48:34 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void ft_phil_init(struct s_philosopher *phil, struct s_data *data, int index)
     gettimeofday(&data->time_from_start, NULL);
     gettimeofday(&phil->last_meal, NULL);
     phil->index = index + 1;
+    phil->eat_count = 0;
     phil->data->dead = 0;
     phil->data = data;
 }
@@ -31,9 +32,12 @@ int    ft_check_death(struct s_philosopher *philo)
 {
 
     gettimeofday(&philo->time_current, NULL);
+    time_print_diff(&philo->data->time_from_start, &philo->time_current);
     // if ((philo->time_current->tv_sec - philo->data.time_from_start->tv_sec) * 1000 + time_current->tv_usec >)
-    if ((philo->last_meal.tv_sec - philo->data->time_from_start.tv_sec) + (philo->last_meal.tv_usec - philo->data->time_from_start.tv_usec) > philo->data->time_to_eat * 10)
+    printf(" philo %d not eat for %ld ms, of max %d ms --- \n", philo->index, (philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000, philo->data->time_to_die);
+    if (((philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec)) / 1000 > philo->data->time_to_die)
     {
+        // printf(" philo %d not eat for %ld ms, of max %d ms ---", philo->index, ((philo->last_meal.tv_sec - philo->data->time_from_start.tv_sec) * 1000 + (philo->last_meal.tv_usec - philo->data->time_from_start.tv_usec)) / 1000, philo->data->time_to_die * 10);
         printf(" philo %d is dead\n", philo->index);
         philo->data->dead = 1;
     }
@@ -43,15 +47,14 @@ int    ft_check_death(struct s_philosopher *philo)
 void    ft_eat(struct s_philosopher *philo)
 {
     pthread_mutex_lock(&philo->data->mforks[philo->index - 1]);
-    gettimeofday(&philo->last_meal, NULL);
-    gettimeofday(&philo->time_current, NULL);
-    time_print_diff(&philo->data->time_from_start, &philo->time_current);
+    // gettimeofday(&philo->time_current, NULL);
     if (ft_check_death(philo))
     {
         return ;
     }
     printf(" philo %d is eating\n", philo->index);
     usleep(philo->data->time_to_eat * 1000);
+    gettimeofday(&philo->last_meal, NULL);
     pthread_mutex_unlock(&philo->data->mforks[philo->index - 1]);
 }
 
@@ -77,6 +80,7 @@ void *ft_phil_routine(void *val)
     while (philo->data->dead == 0 && philo->eat_count < philo->data->meals_total)
     {
         ft_eat(philo);
+        philo->eat_count++;
         ft_sleep(philo);
         ft_think(philo);
         // ft_check_death(philo);
