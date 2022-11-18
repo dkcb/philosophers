@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/18 21:48:34 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/18 21:51:34 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ int    ft_check_death(struct s_philosopher *philo)
     time_print_diff(&philo->data->time_from_start, &philo->time_current);
     // if ((philo->time_current->tv_sec - philo->data.time_from_start->tv_sec) * 1000 + time_current->tv_usec >)
     printf(" philo %d not eat for %ld ms, of max %d ms --- \n", philo->index, (philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000, philo->data->time_to_die);
-    if (((philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec)) / 1000 > philo->data->time_to_die)
+    if ((philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000 > philo->data->time_to_die)
     {
         // printf(" philo %d not eat for %ld ms, of max %d ms ---", philo->index, ((philo->last_meal.tv_sec - philo->data->time_from_start.tv_sec) * 1000 + (philo->last_meal.tv_usec - philo->data->time_from_start.tv_usec)) / 1000, philo->data->time_to_die * 10);
-        printf(" philo %d is dead\n", philo->index);
+        printf(" philo %d is dead\n \n \n", philo->index);
         philo->data->dead = 1;
     }
     return (philo->data->dead);
