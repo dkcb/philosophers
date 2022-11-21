@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/21 16:16:48 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/21 16:31:34 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
         j = 0;
         i++;
     }
-    gettimeofday(&data.time_from_start, NULL);
     data.time_to_die = ft_atoi(argv[2]);
     data.time_to_eat = ft_atoi(argv[3]);
     data.time_to_sleep = ft_atoi(argv[4]);
@@ -144,6 +143,7 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
         }
         i++;
     }
+    gettimeofday(&data.time_from_start, NULL);
     i = 0;
     while (i < number_of_philosophers)
     {
