@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/18 21:51:34 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/21 16:07:33 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
     int                     j = 0;
 
     // printf ("i:%d \n", number_of_philosophers);
-    gettimeofday(&data.time_from_start, NULL);
     if (argc < 3 || argc > 6)
         return (write(2, "Wrong arguments!\n", 17));
     while (argv[i])
@@ -116,11 +115,11 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
         j = 0;
         i++;
     }
+    gettimeofday(&data.time_from_start, NULL);
     data.time_to_die = ft_atoi(argv[2]);
     data.time_to_eat = ft_atoi(argv[3]);
     data.time_to_sleep = ft_atoi(argv[4]);
     data.meals_total = ft_atoi(argv[5]);
-    data.philo = phil;
     data.mforks = &mforks[0];
     pthread_mutex_init(&mdeath, NULL);
     pthread_mutex_init(&mprint, NULL);
