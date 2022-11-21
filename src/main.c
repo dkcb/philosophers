@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/21 16:07:57 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/21 16:16:48 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,10 @@ void *ft_phil_routine(void *val)
 
 int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
 {
+    // struct s_philosopher    phil[number_of_philosophers];
+    // pthread_t               threads[number_of_philosophers];
+    // pthread_mutex_t         mforks[number_of_philosophers];
+    // int                     number_of_philosophers = 201;
     int                     number_of_philosophers = ft_atoi(argv[1]);
     struct s_philosopher    phil[number_of_philosophers];
     pthread_t               threads[number_of_philosophers];
