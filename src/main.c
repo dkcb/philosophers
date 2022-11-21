@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/21 16:07:33 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/21 16:07:57 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int main (int argc, char **argv) //number_of_philosophers time_to_die time_to_ea
     i = 0;
     while (i < number_of_philosophers)
     {
-        ft_phil_init(&data.philo[i], &data, i);
+        ft_phil_init(&phil[i], &data, i);
         pthread_mutex_init(&mforks[i], NULL);
         i++;
     }
