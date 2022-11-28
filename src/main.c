@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/21 16:31:34 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/11/23 22:06:17 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void ft_phil_init(struct s_philosopher *phil, struct s_data *data, int index)
     gettimeofday(&phil->last_meal, NULL);
     phil->index = index + 1;
     phil->eat_count = 0;
-    phil->data->dead = 0;
     phil->data = data;
+    data->dead = 0;
 }
 
 int    ft_check_death(struct s_philosopher *philo)
