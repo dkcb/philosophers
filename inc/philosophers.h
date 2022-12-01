@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/11/18 20:53:57 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/01 14:20:12 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,9 @@ struct s_data
     int time_to_die;
     int meals_total;
     struct s_philosopher *philo;
-    pthread_mutex_t *mutex;
     pthread_mutex_t *mforks;
+    pthread_mutex_t *mdead;
+    pthread_mutex_t *mprint;
     // struct s_fork *forks;
     struct timeval time_from_start;
 };
