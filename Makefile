@@ -6,12 +6,12 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/09 18:49:54 by dkocob        #+#    #+#                  #
-#    Updated: 2022/12/01 17:39:30 by dkocob        ########   odam.nl          #
+#    Updated: 2022/12/01 18:51:30 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 VPATH		= ./obj:./src:./inc/libft:
-SRC			= main.c ft_atoi.c
+SRC			= main.c ft_atoi.c ft_strlen.c ft_putnbr_fd.c ft_putstr_fd.c
 OBJ			= $(SRC:.c=.o)
 NAME		= philo
 CFLAGS		= -Wall -Wextra -g3 -pthread -fsanitize=thread#-Werror -fsanitize=address 

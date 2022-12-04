@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/01 18:45:30 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/01 19:25:50 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 void time_print_diff(struct timeval *time_from_start, struct timeval *time_current)
 {
+    // ft_putnbr_fd((int)time_current->tv_sec - time_from_start->tv_sec, 1);
+    // ft_putnbr_fd((int)time_current->tv_usec/1000, 1);
+    // ft_putstr_fd(" ms", 1);
     printf("%ld%02dms ", time_current->tv_sec - time_from_start->tv_sec, time_current->tv_usec/1000);
 }
 
@@ -30,11 +33,12 @@ void ft_phil_init(struct s_philosopher *phil, struct s_data *data, int index)
 
 int    ft_check_death(struct s_philosopher *philo)
 {
-    pthread_mutex_lock(philo->data->mprint);
     gettimeofday(&philo->time_current, NULL);
+    pthread_mutex_lock(philo->data->mprint);
     printf("%ld%02dms ", philo->time_current.tv_sec - philo->data->time_from_start.tv_sec, philo->time_current.tv_usec/1000);
-    // time_print_diff(&philo->data->time_from_start, &philo->time_current);
     pthread_mutex_unlock(philo->data->mprint);
+    // printf("%l%02dms ", 1123);
+    // time_print_diff(&philo->data->time_from_start, &philo->time_current);
     // printf(" philo %d not eat for %ld ms, of max %d ms --- \n", philo->index, (philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000, philo->data->time_to_die);
     if ((philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000 > philo->data->time_to_die)
     {
@@ -58,9 +62,13 @@ int    ft_check_death(struct s_philosopher *philo)
 
 void    ft_eat(struct s_philosopher *philo)
 {
-    if (ft_check_death(philo))
-        return ;
+
     pthread_mutex_lock(&philo->data->mforks[philo->index - 1]);
+    if (ft_check_death(philo))
+    {
+        pthread_mutex_unlock(&philo->data->mforks[philo->index - 1]);
+        return ;
+    }
     printf(" philo %d is eating\n", philo->index);
     usleep(philo->data->time_to_eat * 1000);
     gettimeofday(&philo->last_meal, NULL);
@@ -70,7 +78,7 @@ void    ft_eat(struct s_philosopher *philo)
 void    ft_sleep(struct s_philosopher *philo)
 {
     if (ft_check_death(philo))
-        return ;
+            return ;
     printf(" Philo %d is sleeping \n", philo->index);
     usleep(philo->data->time_to_sleep * 1000);
 }
@@ -88,15 +96,10 @@ void *ft_phil_routine(void *val)
 
     while (philo->eat_count < philo->data->meals_total)
     {
-        if (ft_check_death(philo))
-            return (NULL);
+
         ft_eat(philo);
         philo->eat_count++;
-        if (ft_check_death(philo))
-            return (NULL);
         ft_sleep(philo);
-        if (ft_check_death(philo))
-            return (NULL);
         ft_think(philo);
     }
     return (NULL);
@@ -163,7 +166,7 @@ int main (int argc, char **argv)
             perror("thread join fails!\n");
             return (2);
         }
-        printf("thread joined\n");
+        // printf("thread joined\n");
         i++;
     }
     i = 0;
@@ -176,3 +179,19 @@ int main (int argc, char **argv)
     pthread_mutex_destroy(data.mdead);
     return 0;
 }
+
+// void    ft_eat(struct s_philosopher *philo)
+// {
+//     pthread_mutex_lock(&philo->data->mforks[philo->index - 1]);
+//     if (ft_check_death(philo))
+//         return ;
+//     usleep(philo->data->time_to_eat * 1000);
+//     gettimeofday(&philo->last_meal, NULL);
+//     pthread_mutex_unlock(&philo->data->mforks[philo->index - 1]);
+//     pthread_mutex_lock(philo->data->mprint);
+//     gettimeofday(&philo->time_current, NULL);
+//     // printf("%ld%02dms ", philo->time_current.tv_sec - philo->data->time_from_start.tv_sec, philo->time_current.tv_usec/1000);
+//     time_print_diff(&philo->data->time_from_start, &philo->time_current);
+//     printf(" philo %d is eating\n", philo->index);
+//     pthread_mutex_unlock(philo->data->mprint);
+// }
