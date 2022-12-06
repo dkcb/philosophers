@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/06 20:34:53 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/06 20:40:12 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ void *ft_phil_routine(void *val)
     while (philo->eat_count < philo->data->meals_total)
     {
 
+        if (ft_check_death(philo))
+            return (NULL);
         ft_eat(philo);
         philo->eat_count++;
         if (ft_check_death(philo))
@@ -108,8 +110,6 @@ void *ft_phil_routine(void *val)
         if (ft_check_death(philo))
             return (NULL);
         ft_think(philo);
-        if (ft_check_death(philo))
-            return (NULL);
     }
     return (NULL);
 }
