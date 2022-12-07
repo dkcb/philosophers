@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/06 20:40:12 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/07 22:10:45 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,38 @@ long time_diff(struct timeval *t2)
     gettimeofday(&current, NULL);
     return ((current.tv_sec - t2->tv_sec) * 1000 + (current.tv_usec - t2->tv_usec) / 1000);
 }
-void time_print_diff(struct s_philosopher *philo, int action)
+int time_print_diff(struct s_philosopher *philo, int action)
 {
     pthread_mutex_lock(philo->data->mprint);
-    // gettimeofday(&philo->time_current, NULL);
+    if (philo->data->dead == 1)
+    {
+        pthread_mutex_unlock(philo->data->mprint);
+        return (1);
+    }
     printf("%ldms", time_diff(&philo->data->time_from_start));
     if (action == 0)
-        printf(" Philo %d is dead\n", philo->index);
-    if (action == 1)
-        printf(" philo %d is eating\n", philo->index);
-    if (action == 2)
-        printf(" Philo %d is sleeping\n", philo->index);
+    {   
+        if (philo->data->dead == 0)
+        {
+            printf(" === philo %d, last time eat is %ldms\n", philo->index, time_diff(&philo->last_meal));
+            printf(" Philo %d is dead\n", philo->index);
+        }
+        philo->data->dead = 1;
+        pthread_mutex_unlock(philo->data->mprint);
+        return (1);
+    }
+    if (action == 10)
+        printf(" philo %d started eating\n", philo->index);
+    if (action == 11)
+        printf(" philo %d stoped eating\n", philo->index);
+    if (action == 20)
+        printf(" Philo %d started sleeping\n", philo->index);
+    if (action == 21)
+        printf(" Philo %d stoppped sleeping\n", philo->index);
     if (action == 3)
         printf(" Philo %d is thinking\n", philo->index);
     pthread_mutex_unlock(philo->data->mprint);
+    return (0);
 }
 
 void ft_phil_init(struct s_philosopher *philo, struct s_data *data, int index)
@@ -42,25 +60,13 @@ void ft_phil_init(struct s_philosopher *philo, struct s_data *data, int index)
     philo->index = index + 1;
     philo->eat_count = 0;
     philo->data = data;
-    // gettimeofday(&philo->time_current, NULL);
     data->dead = 0;
-    // printf("init philo %d, last time eat is %ldms\n", philo->index, time_diff(&philo->time_current, &philo->data->time_from_start));
 }
 
-int    ft_check_death(struct s_philosopher *philo)
+int ft_check_death(struct s_philosopher *philo)
 {
-    
-    gettimeofday(&philo->time_current, NULL);
-    if ((philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000 > philo->data->time_to_die)
-    {
-        printf(" philo %d not eat for %ld ms, of max %d ms --- \n", philo->index, (philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000, philo->data->time_to_die);
-        pthread_mutex_lock(philo->data->mdead);
-        if (philo->data->dead == 0)
-            time_print_diff(philo, 0);
-        philo->data->dead = 1;
-        pthread_mutex_unlock(philo->data->mdead);
-        return (1);
-    }
+    if (time_diff(&philo->last_meal) > philo->data->time_to_die)
+        return (time_print_diff(philo, 0));
     return (0);
 }
 
@@ -72,8 +78,9 @@ void    ft_eat(struct s_philosopher *philo)
         pthread_mutex_unlock(&philo->data->mforks[philo->index - 1]);
         return ;
     }
-    time_print_diff(philo, 1);
+    time_print_diff(philo, 10);
     usleep(philo->data->time_to_eat * 1000);
+    time_print_diff(philo, 11);
     gettimeofday(&philo->last_meal, NULL);
     pthread_mutex_unlock(&philo->data->mforks[philo->index - 1]);
 }
@@ -82,8 +89,9 @@ void    ft_sleep(struct s_philosopher *philo)
 {
     if (ft_check_death(philo))
             return ;
-    time_print_diff(philo, 2);
+    time_print_diff(philo, 20);
     usleep(philo->data->time_to_sleep * 1000);
+    time_print_diff(philo, 21);
 }
 
 void    ft_think(struct s_philosopher *philo)
