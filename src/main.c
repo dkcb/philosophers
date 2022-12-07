@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/07 22:10:45 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/07 22:13:24 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,36 +197,3 @@ int main (int argc, char **argv)
     pthread_mutex_destroy(data.mdead);
     return 0;
 }
-
-// void    ft_eat(struct s_philosopher *philo)
-// {
-//     pthread_mutex_lock(&philo->data->mforks[philo->index - 1]);
-//     if (ft_check_death(philo))
-//         return ;
-//     usleep(philo->data->time_to_eat * 1000);
-//     gettimeofday(&philo->last_meal, NULL);
-//     pthread_mutex_unlock(&philo->data->mforks[philo->index - 1]);
-//     pthread_mutex_lock(philo->data->mprint);
-//     gettimeofday(&philo->time_current, NULL);
-//     // printf("%ld%02dms ", philo->time_current.tv_sec - philo->data->time_from_start.tv_sec, philo->time_current.tv_usec/1000);
-//     time_print_diff(&philo->data->time_from_start, &philo->time_current);
-//     printf(" philo %d is eating\n", philo->index);
-//     pthread_mutex_unlock(philo->data->mprint);
-// }
-
-
- 
-    // printf("%l%02dms ", 1123);
-    // time_print_diff(&philo->data->time_from_start, &philo->time_current);
-    // printf("%ld%02dms ", time_current->tv_sec - time_from_start->tv_sec, time_current->tv_usec/1000);
-    // ft_putnbr_fd((int)time_current->tv_sec - time_from_start->tv_sec, 1);
-    // ft_putnbr_fd((int)time_current->tv_usec/1000, 1);
-    // ft_putstr_fd(" ms", 1);
-    // printf("%ld%02dms ", philo->time_current.tv_sec - philo->data->time_from_start.tv_sec, philo->time_current.tv_usec/1000);
-    // printf(" philo %d not eat for %ld ms, of max %d ms --- \n", philo->index, (philo->time_current.tv_sec - philo->last_meal.tv_sec) * 1000 + (philo->time_current.tv_usec - philo->last_meal.tv_usec) / 1000, philo->data->time_to_die);
-            // printf(" philo %d is dead\n \n \n", philo->index);
-
-// long time_diff(struct timeval *t1, struct timeval *t2)
-// {
-//     return ((t1->tv_sec - t2->tv_sec) * 1000 + (t1->tv_usec - t2->tv_usec) / 1000);
-// }
