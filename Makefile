@@ -6,7 +6,7 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/09 18:49:54 by dkocob        #+#    #+#                  #
-#    Updated: 2022/12/07 21:54:14 by dkocob        ########   odam.nl          #
+#    Updated: 2022/12/08 17:56:37 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ $(NAME):	$(OBJ)
 			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 # number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] *
 run:		$(NAME)
-			./$(NAME) 3 1200 500 1197 5
+			./$(NAME) 1 2000 1000 1900 2
 clean:
 			rm -f $(OBJ)
 
