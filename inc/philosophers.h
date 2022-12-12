@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/01 14:20:12 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/09 17:47:56 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,36 +22,16 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-// struct s_fork
-// {
-//     int fork;
-//     struct timeval take;
-//     struct timeval put;
-// };
-
-// struct s_time
-// {
-//     struct timeval start_at;
-//     struct timeval stop_at;
-// };
-
-// struct s_arms
-// {
-//     struct s_fork left;
-//     struct s_fork right;
-// };
-
-// struct s_activity
-// {
-//     int taken_a_fork;
-//     int is_eating;
-//     int is_sleeping;
-//     int is_thinking;
-//     int died;
-//     struct s_time t_eat;
-//     struct s_time t_think;
-//     struct s_time t_sleep;
-// };
+#define FORK1 101
+#define FORK2 102
+#define EATING 10
+#define STOPEATING 11
+#define SLEAPING 20
+#define STOPSLEAPING 21
+#define THINKING 3
+#define DIED 0
+#define F1 philo->index - 1
+#define F2 philo->index % philo->data->number_of_philosophers
 struct s_philosopher
 {
     struct s_data   *data;
@@ -59,26 +39,22 @@ struct s_philosopher
     struct timeval  last_meal;
     int             index;
     int             eat_count;
-    // struct s_fork forks;
-    // struct s_arms arms;
-    // struct s_activity act;
-    // pthread_mutex_t *mutex_right_fork;
 };
 
 struct s_data
 {
-    // struct timeval *time_from_start;
-    int dead;
-    int time_to_eat;
-    int time_to_sleep;
-    int time_to_die;
-    int meals_total;
-    struct s_philosopher *philo;
-    pthread_mutex_t *mforks;
-    pthread_mutex_t *mdead;
-    pthread_mutex_t *mprint;
-    // struct s_fork *forks;
-    struct timeval time_from_start;
+    int                     dead;
+    int                     time_to_eat;
+    int                     time_to_sleep;
+    int                     time_to_die;
+    int                     meals_total;
+    int                     number_of_philosophers;
+    struct s_philosopher    *philo;
+    pthread_mutex_t         *mforks;
+    pthread_mutex_t         *mdead;
+    pthread_mutex_t         *mprint;
+    long                    start_time_long;
+    struct timeval          time_from_start;
 };
 
 #endif
