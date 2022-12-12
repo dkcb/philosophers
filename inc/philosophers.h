@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/12 21:05:51 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/12 22:30:04 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@
 struct s_philosopher
 {
     struct s_data   *data;
-    long            time_to_live;
-    // struct timeval  time_current;
+    int             time_to_live;
     struct timeval  last_meal;
     int             index;
     int             eat_count;
