@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/13 15:34:29 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 17:17:03 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 18:22:56 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,14 @@ int err_chk()
     return (1);
 }
 
-
-
-int init_forks(pthread_mutex_t *mforks, int number_of_philosophers)
+int init_forks(struct s_data *data)
 {
     int i;
 
     i = 0;
-    while (i < number_of_philosophers)
+    while (i < data->number_of_philosophers)
     {
-        if (pthread_mutex_init(&mforks[i], NULL) != 0)
+        if (pthread_mutex_init(&data->mforks[i], NULL) != 0)
             return (write(2, "Mutex init fail!\n", 17));
         i++;
     }
@@ -46,24 +44,6 @@ int init_philo(struct s_philosopher *philo, int number_of_philosophers, struct s
         philo->eat_count = data->meals_total;
         philo->data = data;
         data->dead = 0;
-        i++;
-    }
-    return (0);
-}
-
-int init_threads(struct s_philosopher *phil, pthread_t *threads, int number_of_philosophers)
-{
-    int i;
-
-    i = 0;
-    while (i < number_of_philosophers)
-    {
-        usleep (i % 2 * phil->data->time_to_eat);
-        if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
-        {
-            perror("thread creation fails!\n");
-            return (1);
-        }
         i++;
     }
     return (0);
@@ -106,8 +86,9 @@ int init(int argc, char **argv, struct s_data *data)
         printf("%d 1 died\n", data->time_to_die);
         return (0);
     }
-    init_philo(data->philo, data->number_of_philosophers, data);
-    init_forks(data->mforks, data->number_of_philosophers);
-    init_threads(data->philo, data->threads, data->number_of_philosophers);
+    if (init_philo(data->philo, data->number_of_philosophers, data))
+        return (-1);
+    if (init_forks(data) != 0)
+        return (-1);
     return (0);
 }

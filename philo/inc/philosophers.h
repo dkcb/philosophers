@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 17:10:55 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 18:20:15 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,31 @@ struct s_data
     int                     number_of_philosophers;
     struct s_philosopher    *philo;
     pthread_mutex_t         *mforks;
-    pthread_mutex_t         *mdead;
-    pthread_mutex_t         *mprint;
+    pthread_mutex_t         mprint;
     pthread_t               *threads;
     long                    start_time_long;
     struct timeval          time_from_start;
 };
 
 int	ft_atoi(const char *str);
-int init(int argc, char **argv, struct s_data *data);
 int csleep(int ms, int *ttl);
 void *ft_phil_routine(void *val);
+
+int init(int argc, char **argv, struct s_data *data);
+int cleaning(struct s_data *data);
+int init_threads(struct s_data *data);
+int init_philo(struct s_philosopher *philo, int number_of_philosophers, struct s_data *data);
+int init_forks(struct s_data *data);
+long time_vs_current(struct timeval *t2);
+int time_print_diff(struct s_philosopher *philo, int action);
+int ft_check_death(struct s_philosopher *philo);
+int csleep(int ms, int *ttl);
+int ft_eat(struct s_philosopher *philo);
+int ft_sleep(struct s_philosopher *philo);
+int ft_think(struct s_philosopher *philo);
+
+
+
 
 #endif
 
