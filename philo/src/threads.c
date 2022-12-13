@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/13 17:34:31 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 23:35:54 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 23:42:47 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int init_threads(struct s_data *data)
     i = 0;
     while (i < data->number_of_philosophers)
     {
-        usleep (i % 2 * data->time_to_eat);
+        usleep (i % 2 * 5);
         if (pthread_create(&data->threads[i], NULL, &ft_phil_routine, &data->philo_arr[i]) != 0)
         {
             perror("thread creation fails!\n");
