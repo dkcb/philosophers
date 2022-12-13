@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 22:19:08 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 23:11:47 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,19 @@ int time_print_diff(struct s_philosopher *philo, int action)
 }
 
 
-int ft_check_death(struct s_philosopher *philo)
-{
-    // printf ("cdeath1\n");
-    // if (philo->time_to_live - time_current_long() <= 0 || death_check(philo->data) == 1)
-    if (philo->time_to_live - time_current_long() <= 0)
-    {
-        // printf ("cdeath12\n");
-        return (death_set(philo->data, philo->index));
+// int ft_check_death(struct s_philosopher *philo)
+// {
+//     // printf ("cdeath1\n");
+//     // if (philo->time_to_live - time_current_long() <= 0 || death_check(philo->data) == 1)
+//     if (philo->time_to_live - time_current_long() <= 0)
+//     {
+//         // printf ("cdeath12\n");
+//         return (death_set(philo->data, philo->index));
         
-    }
-    // printf ("cdeath2\n");
-    return (0);
-}
+//     }
+//     // printf ("cdeath2\n");
+//     return (0);
+// }
 
 int csleep(int ms, long *ttl)
 {

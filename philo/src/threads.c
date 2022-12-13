@@ -6,44 +6,11 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/13 17:34:31 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 22:24:01 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 23:35:54 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
-
-int death_check(struct s_data *data)
-{
-    printf ("DC1\n");
-    
-    pthread_mutex_lock(&data->mdeath);
-    if (data->dead == 1)
-        return (1);
-    return (0);
-    printf ("DC2\n");
-    pthread_mutex_unlock(&data->mdeath);
-    printf ("DC3\n");
-
-}
-
-int death_set(struct s_data *data, int index)
-{
-    printf ("DS1\n");
-    pthread_mutex_lock(&data->mdeath);
-    if (data->dead != 1)
-    {
-        
-        pthread_mutex_lock(&data->mprint);
-        printf ("%5ld ", time_current_long() - data->time_start_long);
-        printf(" %d died\n", index);
-        printf ("DS12\n");
-        pthread_mutex_lock(&data->mprint);
-    }
-    data->dead = 1;
-    pthread_mutex_unlock(&data->mdeath);
-    printf ("DS2\n");
-    return (1);
-}
 
 void *ft_phil_routine(void *val)
 {
@@ -51,12 +18,12 @@ void *ft_phil_routine(void *val)
 
     while (philo->eat_count != 0)
     {
-        if (!ft_eat(philo) || ft_check_death(philo) == 1)
+        if (!ft_eat(philo) || death_set(philo) == 1)
             return (NULL);
         philo->eat_count--;
-        if (!ft_sleep(philo) || ft_check_death(philo) == 1)
+        if (!ft_sleep(philo) || death_set(philo) == 1)
             return (NULL);
-        if (!ft_think(philo) || ft_check_death(philo) == 1)
+        if (!ft_think(philo) || death_set(philo) == 1)
             return (NULL);
     }
     return (NULL);

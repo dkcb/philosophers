@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 22:19:48 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 23:29:23 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,11 @@ int init_philo(struct s_data *data);
 int init_forks(struct s_data *data);
 long time_vs_current(struct timeval *t2);
 int time_print_diff(struct s_philosopher *philo, int action);
-int ft_check_death(struct s_philosopher *philo);
 int ft_eat(struct s_philosopher *philo);
 int ft_sleep(struct s_philosopher *philo);
 int ft_think(struct s_philosopher *philo);
 long time_current_long(void);
-int death_set(struct s_data *data, int index);
-int death_check(struct s_data *data);
+int death_set(struct s_philosopher *philo);
 
 // int time_vs_long(long t1);
 

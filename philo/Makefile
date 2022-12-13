@@ -6,12 +6,12 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/09 18:49:54 by dkocob        #+#    #+#                  #
-#    Updated: 2022/12/13 22:17:03 by dkocob        ########   odam.nl          #
+#    Updated: 2022/12/13 23:20:21 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 VPATH		= ./obj:./src:./inc/libft:
-SRC			= main.c libft.c init.c end.c threads.c actions.c
+SRC			= main.c libft.c init.c end.c threads.c actions.c death.c
 OBJ			= $(SRC:.c=.o)
 NAME		= philo
 CFLAGS		= -Wall -Wextra -g3 -pthread #-fsanitize=thread # -fsanitize=address #-Werror -fsanitize=address 
