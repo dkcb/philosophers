@@ -6,44 +6,32 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 18:25:46 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 22:19:08 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-long time_vs_current(struct timeval *t2)
+long time_current_long(void)
 {
     struct timeval current;
     
     gettimeofday(&current, NULL);
-    return ((current.tv_sec - t2->tv_sec) * 1000 + (current.tv_usec - t2->tv_usec) / 1000);
+    return ((current.tv_sec) * 1000 + (current.tv_usec) / 1000);
 }
 
 int time_print_diff(struct s_philosopher *philo, int action)
 {
+    // if (death_check(philo->data) == 1)
+    // {   
+    //     return (1);
+    // }
     pthread_mutex_lock(&philo->data->mprint);
-    if (philo->data->dead == 1)
-    {
-        pthread_mutex_unlock(&philo->data->mprint);
-        return (1);
-    }
-    printf("%ld", time_vs_current(&philo->data->time_from_start));
-    if (action == 0)
-    {   
-        if (philo->data->dead == 0)
-        {
-            printf(" === philo %d, did not eat %ldms of %dms\n", philo->index, time_vs_current(&philo->last_meal), philo->data->time_to_die);
-            printf(" %d died\n", philo->index);
-        }
-        philo->data->dead = 1;
-        pthread_mutex_unlock(&philo->data->mprint);
-        return (1);
-    }
+    printf ("%5ld ", time_current_long() - philo->data->time_start_long);
     if (action == 101)
-        printf(" %d has taken a fork1\n", philo->index);
+        printf(" %d has taken a fork\n", philo->index);
     if (action == 102)
-        printf(" %d has taken a fork2\n", philo->index);
+        printf(" %d has taken a fork\n", philo->index);
     if (action == 10)
         printf(" %d is eating\n", philo->index);
     if (action == 11)
@@ -55,43 +43,42 @@ int time_print_diff(struct s_philosopher *philo, int action)
     if (action == 3)
         printf(" %d is thinking\n", philo->index);
     pthread_mutex_unlock(&philo->data->mprint);
+    // printf ("PRINT\n");
     return (0);
 }
 
 
 int ft_check_death(struct s_philosopher *philo)
 {
-    // if (philo->data) > philo->data->time_to_die)
-    //     return (time_print_diff(philo, DIED));
-    if (time_vs_current(&philo->last_meal) > philo->data->time_to_die)
-        return (time_print_diff(philo, DIED));
+    // printf ("cdeath1\n");
+    // if (philo->time_to_live - time_current_long() <= 0 || death_check(philo->data) == 1)
+    if (philo->time_to_live - time_current_long() <= 0)
+    {
+        // printf ("cdeath12\n");
+        return (death_set(philo->data, philo->index));
+        
+    }
+    // printf ("cdeath2\n");
     return (0);
 }
 
-int csleep(int ms, int *ttl)
+int csleep(int ms, long *ttl)
 {
     long end;
-    struct timeval cur;
+    int dead;
+    // printf ("sleep\n");
 
-    gettimeofday(&cur, NULL);
-    // printf("ttl1: %d\n", (int)(*ttl - cur.tv_sec * 1000 - cur.tv_usec / 1000));
-    // else
-    // {
-    end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + ms;
-    //     *ttl = *ttl - ms;
-    // }
-    while (cur.tv_sec * 1000 + cur.tv_usec / 1000 <= end)
+    dead = 0;
+    end = time_current_long()  + (long)ms;
+    if (ms > ttl[0] - time_current_long())
     {
-        if (!(int)(*ttl - cur.tv_sec * 1000 - cur.tv_usec / 1000))
-        {
-            // end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + *ttl;
-            return (1);
-        }
-        usleep(250);
-        gettimeofday(&cur, NULL);
+        // printf ("%d: DEAD ttl0 - cur:%ld\n", philo->index, ttl[0] - time_current_long());
+        end = ttl[0];
+        dead = 1;
     }
-    // printf("ttl2: %d", *ttl - cur);
-    return (0);
+    while (time_current_long() < end)
+        usleep(250);
+    return (dead);
 }
 
 int main (int argc, char **argv) 
@@ -101,14 +88,16 @@ int main (int argc, char **argv)
     pthread_mutex_t         mforks[201];
     struct s_data           data;
 
-    data.philo = &phil[0];
+    data.philo_arr = &phil[0];
     data.threads = &threads[0];
     data.mforks = &mforks[0];
     pthread_mutex_init(&data.mprint, NULL);
+    pthread_mutex_init(&data.mdeath, NULL);
     if (init(argc, argv, &data) != 0)
         return (-1);
     init_threads(&data);
     cleaning(&data);
     pthread_mutex_destroy(&data.mprint);
+    pthread_mutex_destroy(&data.mdeath);
     return (0);
 }
