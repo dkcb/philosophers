@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/12 22:30:04 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 17:10:55 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/wait.h>
-# include "libft/libft.h"
+// # include "libft/libft.h"
 # include <sys/time.h>
 # include <pthread.h>
 
@@ -32,6 +32,7 @@
 #define DIED 0
 #define F1 philo->index - 1
 #define F2 philo->index % philo->data->number_of_philosophers
+
 struct s_philosopher
 {
     struct s_data   *data;
@@ -53,9 +54,15 @@ struct s_data
     pthread_mutex_t         *mforks;
     pthread_mutex_t         *mdead;
     pthread_mutex_t         *mprint;
+    pthread_t               *threads;
     long                    start_time_long;
     struct timeval          time_from_start;
 };
+
+int	ft_atoi(const char *str);
+int init(int argc, char **argv, struct s_data *data);
+int csleep(int ms, int *ttl);
+void *ft_phil_routine(void *val);
 
 #endif
 

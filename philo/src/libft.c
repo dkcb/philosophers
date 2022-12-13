@@ -1,16 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_atoi.c                                          :+:    :+:            */
+/*   libft.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/08/26 15:35:13 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/06/18 15:49:32 by dkocob        ########   odam.nl         */
+/*   Created: 2022/12/13 15:21:23 by dkocob        #+#    #+#                 */
+/*   Updated: 2022/12/13 15:33:48 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 static int	ft_isspace(char c)
 {
@@ -24,7 +32,7 @@ int	ft_atoi(const char *str)
 {
 	int		i;
 	int		sign;
-	size_t	res;
+	long 	res;
 
 	sign = 1;
 	i = 0;

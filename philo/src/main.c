@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:51:34 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/12 22:42:23 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/13 17:15:42 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ long time_vs_current(struct timeval *t2)
     gettimeofday(&current, NULL);
     return ((current.tv_sec - t2->tv_sec) * 1000 + (current.tv_usec - t2->tv_usec) / 1000);
 }
-
-
 
 int time_print_diff(struct s_philosopher *philo, int action)
 {
@@ -60,17 +58,6 @@ int time_print_diff(struct s_philosopher *philo, int action)
     return (0);
 }
 
-void ft_phil_init(struct s_philosopher *philo, struct s_data *data, int index)
-{
-    gettimeofday(&philo->last_meal, NULL);
-    
-    philo->time_to_live = philo->last_meal.tv_sec * 1000 + philo->last_meal.tv_usec / 1000 + data->time_to_die;
-    printf("ttlini: %d", philo->time_to_live);
-    philo->index = index + 1;
-    philo->eat_count = data->meals_total;
-    philo->data = data;
-    data->dead = 0;
-}
 
 int ft_check_death(struct s_philosopher *philo)
 {
@@ -86,16 +73,16 @@ int csleep(int ms, int *ttl)
     long end;
     struct timeval cur;
 
-    printf("ttl1: %d", *ttl - cur);
     gettimeofday(&cur, NULL);
+    // printf("ttl1: %d\n", (int)(*ttl - cur.tv_sec * 1000 - cur.tv_usec / 1000));
     // else
     // {
     end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + ms;
     //     *ttl = *ttl - ms;
     // }
-    while (cur.tv_sec * 1000 + cur.tv_usec / 1000 <= ms)
+    while (cur.tv_sec * 1000 + cur.tv_usec / 1000 <= end)
     {
-        if (cur > *ttl)
+        if (!(int)(*ttl - cur.tv_sec * 1000 - cur.tv_usec / 1000))
         {
             // end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + *ttl;
             return (1);
@@ -103,7 +90,7 @@ int csleep(int ms, int *ttl)
         usleep(250);
         gettimeofday(&cur, NULL);
     }
-    printf("ttl2: %d", *ttl - cur);
+    // printf("ttl2: %d", *ttl - cur);
     return (0);
 }
 
@@ -126,6 +113,7 @@ int    ft_eat(struct s_philosopher *philo)
     time_print_diff(philo, FORK2);
     time_print_diff(philo, EATING);
     gettimeofday(&philo->last_meal, NULL);
+    philo->time_to_live = philo->last_meal.tv_sec * 1000 + philo->last_meal.tv_usec / 1000 + philo->data->time_to_die;
     if (csleep(philo->data->time_to_eat, &philo->time_to_live))
         return (time_print_diff(philo, DIED));
     pthread_mutex_unlock(&philo->data->mforks[F1]);
@@ -182,55 +170,14 @@ int main (int argc, char **argv)
     pthread_mutex_t         mprint;
     struct s_data           data;
     int                     i = 1;
-    int                     j = 0;
 
-    if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200)
-        return (write(2, "Wrong arguments!\n", 17));
-    gettimeofday(&data.time_from_start, NULL);
-    data.start_time_long = (data.time_from_start.tv_sec * 1000 + data.time_from_start.tv_usec / 1000);
     data.mforks = &mforks[0];
     data.mprint = &mprint;
-    data.meals_total = -1;
-    while (argv[i])
-    {
-        while(argv[i][j] != '\0')
-        {
-            if (argv[i][j] >= '0' && argv[i][j] <= '9' && argv[i][j] != '\0')
-                j++;
-            else 
-                return (write(2, "Wrong input!\n", 13));
-        }
-        j = 0;
-        i++;
-    }
-    data.number_of_philosophers = ft_atoi(argv[1]);
-    data.time_to_die = ft_atoi(argv[2]);
-    data.time_to_eat = ft_atoi(argv[3]);
-    data.time_to_sleep = ft_atoi(argv[4]);
-    if (argv[5])
-      data.meals_total = ft_atoi(argv[5]);
-    if (data.number_of_philosophers == 1)
-    {
-        printf("0 1 has taken a fork\n");
-        csleep(data.time_to_sleep, &data.time_to_die);
-        printf("%d 1 died\n", data.time_to_die);
-        return (0);
-    }
+    data.threads = &threads[0];
+    data.philo = &phil[0];
+    init(argc, argv, &data);
     pthread_mutex_init(&mprint, NULL);
-    i = 0;
-    while (i < data.number_of_philosophers)
-    {
-        ft_phil_init(&phil[i], &data, i);
-        if (pthread_mutex_init(&mforks[i], NULL) != 0)
-            return (write(2, "Mutex init fail!\n", 17));
-        usleep (i % 2 * data.time_to_eat);
-        if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
-        {
-            perror("thread creation fails!\n");
-            return (1);
-        }
-        i++;
-    }
+    
     i = 0;
     while (i < data.number_of_philosophers)
     {
@@ -251,79 +198,4 @@ int main (int argc, char **argv)
     pthread_mutex_destroy(data.mprint);
     return (0);
 }
-    // pthread_mutex_init(&mprint, NULL);
-    // i = 0;
-    // while (i < data.number_of_philosophers)
-    // {
-    //     ft_phil_init(&phil[i], &data, i);
-    //     if (pthread_mutex_init(&mforks[i], NULL) !=0)
-    //         return (write(2, "Mutex init fail!\n", 17));
-    //     i++;
-    // }
-    // i = 0;
-    // while (i < data.number_of_philosophers)
-    // {
-    //     usleep (i % 2 * 5);
-    //     if (pthread_create(&threads[i], NULL, &ft_phil_routine, &phil[i]) != 0)
-    //     {
-    //         perror("thread creation fails!\n");
-    //         return (1);
-    //     }
-    //     i++;
-    // }
-    // long time_diff(struct timeval *t2, struct timeval *t1)
-// {
-//     return ((t1->tv_sec - t2->tv_sec) * 1000 + (t1->tv_usec - t2->tv_usec) / 1000);
-// }
-
-// int csleep(int ms, struct timeval last_meal, int ttd, long *ttl)
-// {
-//     long end;
-//     long lastm;
-//     int dead = 0;
-//     struct timeval cur;
-
-//     lastm = last_meal.tv_sec * 1000 + last_meal.tv_usec / 1000;
-//     gettimeofday(&cur, NULL);
-//     end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + ms;
-//     if (end - lastm > ttd)
-//     {
-//         dead = 1;
-//         printf("--- End:%ld, lastm:%ld, ttd: %d, diff:%d, diff_TTD:%d ---\n", end, lastm, ttd, ttd, ttd);
-//         end = lastm + ttd;
-//     }
-//     while (cur.tv_sec * 1000 + cur.tv_usec / 1000 <= end)
-//     {
-//         usleep(250);
-//         gettimeofday(&cur, NULL);
-//     }
-//     return (dead);
-// }
-
-// int csleep(int ms, int *ttl)
-// {
-//     long end;
-//     int dead;
-//     struct timeval cur;
-
-//     printf("ttl1: %d", *ttl);
-//     dead = 0;
-//     gettimeofday(&cur, NULL);
-//     if (ms > *ttl)
-//     {
-//         end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + *ttl;
-//         dead = 1;
-//     }
-//     else
-//     {
-//         end = cur.tv_sec * 1000 + cur.tv_usec / 1000  + ms;
-//         *ttl = *ttl - ms;
-//     }
-//     while (cur.tv_sec * 1000 + cur.tv_usec / 1000 <= end)
-//     {
-//         usleep(250);
-//         gettimeofday(&cur, NULL);
-//     }
-//     printf("ttl2: %d", *ttl);
-//     return (dead);
-// }
+   
