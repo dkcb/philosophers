@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:58 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:09:44 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	init_tarr(struct s_data *d)
 		}
 		i++;
 	}
-	if (pthread_create(&d->tarr[201], NULL, &death_thread, d) != 0)
+	if (pthread_create(&d->tarr[220], NULL, &death_thread, d) != 0)
 	{
 		perror("thread creation fails!\n");
 		return (1);

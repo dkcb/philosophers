@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:04 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:10:25 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,18 @@ int	cleaning(struct s_data *d)
 		}
 		i++;
 	}
+	if (pthread_join(d->tarr[220], NULL))
+	{
+		perror("thread join fails!\n");
+		return (2);
+	}
 	i = 0;
 	while (i < d->p_qty)
 	{
 		pthread_mutex_destroy(&d->mforks[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&d->mprint);
+	pthread_mutex_destroy(&d->mdeath);
 	return (0);
 }

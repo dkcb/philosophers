@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:50 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:09:32 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	csleep(int ms, struct s_philosopher *philo)
 
 int	main(int argc, char **argv)
 {
-	struct s_philosopher	phil[201];
-	pthread_t				tarr[201];
-	pthread_mutex_t			mforks[201];
+	struct s_philosopher	phil[222];
+	pthread_t				tarr[222];
+	pthread_mutex_t			mforks[222];
 	struct s_data			d;
 
 	d.p_arr = &phil[0];
@@ -81,7 +81,5 @@ int	main(int argc, char **argv)
 	}
 	init_tarr(&d);
 	cleaning(&d);
-	pthread_mutex_destroy(&d.mprint);
-	pthread_mutex_destroy(&d.mdeath);
 	return (0);
 }
