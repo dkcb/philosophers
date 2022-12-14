@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:58 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 22:09:44 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:35:25 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,16 @@ void	*death_thread(void *val)
 		i = 0;
 		while (i < d->p_qty - 1)
 		{
+			pthread_mutex_lock(&d->mdeath);
 			if (d->p_arr[i].time_to_live < time_cl())
 			{
 				d->dead++;
-				pthread_mutex_lock(&d->mprint);
 				if (d->dead == 1)
 					printf ("%5ld %d died\n", time_cl() - d->time_start, i + 1);
-				pthread_mutex_unlock(&d->mprint);
 			}
 			i++;
+			pthread_mutex_unlock(&d->mdeath);
 		}
-		pthread_mutex_unlock(&d->mdeath);
 		usleep(50);
 	}
 	return (NULL);

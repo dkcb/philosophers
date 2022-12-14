@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:50 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 22:09:32 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:34:58 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ long	time_cl(void)
 
 int	time_print_diff(struct s_philosopher *philo, int action)
 {
+	if (death_check(philo->d))
+		return (1);
 	pthread_mutex_lock(&philo->d->mprint);
 	if (death_check(philo->d))
 	{
@@ -80,6 +82,8 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	init_tarr(&d);
-	cleaning(&d);
+	if (d.p_qty < 1)
+		return (write(2, "Wrong arguments!\n", 17));
+	cleaning(&d, 0);
 	return (0);
 }

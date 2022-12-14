@@ -6,17 +6,14 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:04 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 22:10:25 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:16:08 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-int	cleaning(struct s_data *d)
+int	cleaning(struct s_data *d, int i)
 {
-	int	i;
-
-	i = 0;
 	while (i < d->p_qty)
 	{
 		if (pthread_join(d->tarr[i], NULL))

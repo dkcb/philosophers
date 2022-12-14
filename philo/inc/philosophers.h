@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:23:36 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:16:30 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	csleep(int ms, struct s_philosopher *philo);
 void	*ft_phil_routine(void *val);
 void	*death_thread(void *val);
 int		init(int argc, char **argv, struct s_data *d);
-int		cleaning(struct s_data *d);
+int		cleaning(struct s_data *d, int i);
 int		init_tarr(struct s_data *d);
 int		init_philo(struct s_data *d);
 int		init_forks(struct s_data *d);
