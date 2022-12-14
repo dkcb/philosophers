@@ -5,8 +5,8 @@
 /*                                                     +:+                    */
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/12/13 15:21:23 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 15:33:48 by dkocob        ########   odam.nl         */
+/*   Created: 2022/12/14 21:24:43 by dkocob        #+#    #+#                 */
+/*   Updated: 2022/12/14 21:24:44 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_atoi(const char *str)
 {
 	int		i;
 	int		sign;
-	long 	res;
+	long	res;
 
 	sign = 1;
 	i = 0;

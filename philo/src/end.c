@@ -5,38 +5,32 @@
 /*                                                     +:+                    */
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/12/13 16:24:21 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 20:15:22 by dkocob        ########   odam.nl         */
+/*   Created: 2022/12/14 21:24:04 by dkocob        #+#    #+#                 */
+/*   Updated: 2022/12/14 21:24:06 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-int cleaning(struct s_data *data)
+int	cleaning(struct s_data *data)
 {
-    int i;
-    
-    i = 0;
-    while (i < data->number_of_philosophers)
-    {
-        if (pthread_join(data->threads[i], NULL))
-        {
-            perror("thread join fails!\n");
-            return (2);
-        }
-        // printf("thread joined\n");
-        i++;
-    }
-    if (pthread_join(data->threads[201], NULL))
-    {
-        perror("thread join fails!\n");
-        return (2);
-    }
-    i = 0;
-    while (i < data->number_of_philosophers)
-    {
-        pthread_mutex_destroy(&data->mforks[i]);
-        i++;
-    }
-    return (0);
+	int	i;
+
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		if (pthread_join(data->tarr[i], NULL))
+		{
+			perror("thread join fails!\n");
+			return (2);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		pthread_mutex_destroy(&data->mforks[i]);
+		i++;
+	}
+	return (0);
 }
