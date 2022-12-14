@@ -6,16 +6,11 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/13 15:34:29 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 21:39:06 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 20:51:11 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
-
-int err_chk()
-{
-    return (1);
-}
 
 int init_forks(struct s_data *data)
 {
@@ -25,7 +20,14 @@ int init_forks(struct s_data *data)
     while (i < data->number_of_philosophers)
     {
         if (pthread_mutex_init(&data->mforks[i], NULL) != 0)
+        {
+            while (i > - 1)
+            {
+                pthread_mutex_destroy(&data->mforks[i]);
+                i--;
+            }    
             return (write(2, "Mutex init fail!\n", 17));
+        }
         i++;
     }
     return (0);
@@ -54,7 +56,6 @@ int init(int argc, char **argv, struct s_data *data)
 
     if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200)
         return (write(2, "Wrong arguments!\n", 17));
-    // data->time_start_long = 0;
     data->time_start_long = time_current_long();
     data->meals_total = -1;
     i = 1;
@@ -77,13 +78,6 @@ int init(int argc, char **argv, struct s_data *data)
     data->time_to_sleep = ft_atoi(argv[4]);
     if (argv[5])
       data->meals_total = ft_atoi(argv[5]);
-    // if (data->number_of_philosophers == 1)
-    // {
-    //     printf("0 1 has taken a fork\n");
-    //     csleep(data->time_to_sleep, &data->time_to_die);
-    //     printf("%d 1 died\n", data->time_to_die);
-    //     return (0);
-    // }
     if (init_philo(data))
         return (-1);
     if (init_forks(data) != 0)

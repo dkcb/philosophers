@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/13 16:24:21 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 23:20:50 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 20:15:22 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ int cleaning(struct s_data *data)
         }
         // printf("thread joined\n");
         i++;
+    }
+    if (pthread_join(data->threads[201], NULL))
+    {
+        perror("thread join fails!\n");
+        return (2);
     }
     i = 0;
     while (i < data->number_of_philosophers)

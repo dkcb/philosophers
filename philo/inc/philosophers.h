@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 18:52:30 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/13 23:29:23 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 20:05:31 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/wait.h>
-// # include "libft/libft.h"
 # include <sys/time.h>
 # include <pthread.h>
 
@@ -58,21 +57,24 @@ struct s_data
 };
 
 int	ft_atoi(const char *str);
-int csleep(int ms, long *ttl);
+void csleep(int ms, struct s_philosopher *philo);
 void *ft_phil_routine(void *val);
+void *death_thread(void *val);
+
 
 int init(int argc, char **argv, struct s_data *data);
 int cleaning(struct s_data *data);
 int init_threads(struct s_data *data);
 int init_philo(struct s_data *data);
 int init_forks(struct s_data *data);
-long time_vs_current(struct timeval *t2);
+// long time_vs_current(struct timeval *t2);
 int time_print_diff(struct s_philosopher *philo, int action);
 int ft_eat(struct s_philosopher *philo);
 int ft_sleep(struct s_philosopher *philo);
 int ft_think(struct s_philosopher *philo);
 long time_current_long(void);
-int death_set(struct s_philosopher *philo);
+int death_check(struct s_data *data);
+
 
 // int time_vs_long(long t1);
 
