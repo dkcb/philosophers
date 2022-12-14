@@ -6,7 +6,7 @@
 #    By: dkocob <dkocob@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/12/14 21:25:07 by dkocob        #+#    #+#                  #
-#    Updated: 2022/12/14 21:25:09 by dkocob        ########   odam.nl          #
+#    Updated: 2022/12/14 21:57:39 by dkocob        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,9 @@ all:		$(NAME)
 
 $(NAME):	$(OBJ)
 			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
-# number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] *
+# p_qty time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] *
 run:		$(NAME)
-			./$(NAME) 4 310 200 100
+			./$(NAME) 2 310 200 100
 			
 # ./$(NAME) 4 310 200 100 free fork
 # philo 200 410 200 200 (run for at least a couple of sec)

@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:50 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:25:49 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ long	time_cl(void)
 
 int	time_print_diff(struct s_philosopher *philo, int action)
 {
-	pthread_mutex_lock(&philo->data->mprint);
-	if (death_check(philo->data))
+	pthread_mutex_lock(&philo->d->mprint);
+	if (death_check(philo->d))
 	{
-		pthread_mutex_unlock(&philo->data->mprint);
+		pthread_mutex_unlock(&philo->d->mprint);
 		return (1);
 	}
-	printf ("%5ld", time_cl() - philo->data->time_start_long);
+	printf ("%5ld", time_cl() - philo->d->time_start);
 	if (action == 101)
 		printf(" %d has taken a fork\n", philo->index);
 	if (action == 102)
@@ -43,7 +43,7 @@ int	time_print_diff(struct s_philosopher *philo, int action)
 		printf(" %d stoppped sleeping\n", philo->index);
 	if (action == 3)
 		printf(" %d is thinking\n", philo->index);
-	pthread_mutex_unlock(&philo->data->mprint);
+	pthread_mutex_unlock(&philo->d->mprint);
 	return (0);
 }
 
@@ -63,25 +63,25 @@ int	main(int argc, char **argv)
 	struct s_philosopher	phil[201];
 	pthread_t				tarr[201];
 	pthread_mutex_t			mforks[201];
-	struct s_data			data;
+	struct s_data			d;
 
-	data.philo_arr = &phil[0];
-	data.tarr = &tarr[0];
-	data.mforks = &mforks[0];
-	pthread_mutex_init(&data.mprint, NULL);
-	pthread_mutex_init(&data.mdeath, NULL);
-	if (init(argc, argv, &data) != 0)
+	d.p_arr = &phil[0];
+	d.tarr = &tarr[0];
+	d.mforks = &mforks[0];
+	pthread_mutex_init(&d.mprint, NULL);
+	pthread_mutex_init(&d.mdeath, NULL);
+	if (init(argc, argv, &d) != 0)
 		return (-1);
-	if (data.number_of_philosophers == 1)
+	if (d.p_qty == 1)
 	{
 		printf("0 1 has taken a fork\n");
-		usleep(data.time_to_die * 1000);
-		printf("%d 1 died\n", data.time_to_die);
+		usleep(d.time_to_die * 1000);
+		printf("%d 1 died\n", d.time_to_die);
 		return (0);
 	}
-	init_tarr(&data);
-	cleaning(&data);
-	pthread_mutex_destroy(&data.mprint);
-	pthread_mutex_destroy(&data.mdeath);
+	init_tarr(&d);
+	cleaning(&d);
+	pthread_mutex_destroy(&d.mprint);
+	pthread_mutex_destroy(&d.mdeath);
 	return (0);
 }

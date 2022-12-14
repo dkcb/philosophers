@@ -6,24 +6,36 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:31 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:24:33 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 22:02:22 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-int	init_forks(struct s_data *data)
+void	init_d(struct s_data *d, char **argv)
+{
+	d->meals_total = -1;
+	d->dead = 0;
+	d->p_qty = ft_atoi(argv[1]);
+	d->time_to_die = ft_atoi(argv[2]);
+	d->time_to_eat = ft_atoi(argv[3]);
+	d->time_to_sleep = ft_atoi(argv[4]);
+	if (argv[5])
+		d->meals_total = ft_atoi(argv[5]);
+}
+
+int	init_forks(struct s_data *d)
 {
 	int	i;
 
 	i = 0;
-	while (i < data->number_of_philosophers)
+	while (i < d->p_qty)
 	{
-		if (pthread_mutex_init(&data->mforks[i], NULL) != 0)
+		if (pthread_mutex_init(&d->mforks[i], NULL) != 0)
 		{
 			while (i > -1)
 			{
-				pthread_mutex_destroy(&data->mforks[i]);
+				pthread_mutex_destroy(&d->mforks[i]);
 				i--;
 			}
 			return (write(2, "Mutex init fail!\n", 17));
@@ -33,31 +45,30 @@ int	init_forks(struct s_data *data)
 	return (0);
 }
 
-int	init_philo(struct s_data *data)
+int	init_philo(struct s_data *d)
 {
 	int	i;
 
 	i = 0;
-	while (i < data->number_of_philosophers)
+	while (i < d->p_qty)
 	{
-		data->philo_arr[i].time_to_live = time_cl() + data->time_to_die;
-		data->philo_arr[i].index = i + 1;
-		data->philo_arr[i].eat_count = data->meals_total;
-		data->philo_arr[i].data = data;
+		d->p_arr[i].time_to_live = time_cl() + d->time_to_die;
+		d->p_arr[i].index = i + 1;
+		d->p_arr[i].eat_count = d->meals_total;
+		d->p_arr[i].d = d;
 		i++;
 	}
 	return (0);
 }
 
-int	init(int argc, char **argv, struct s_data *data)
+int	init(int argc, char **argv, struct s_data *d)
 {
 	int	i;
 	int	j;
 
 	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200)
 		return (write(2, "Wrong arguments!\n", 17));
-	data->time_start_long = time_cl();
-	data->meals_total = -1;
+	d->time_start = time_cl();
 	i = 1;
 	while (argv[i])
 	{
@@ -71,16 +82,10 @@ int	init(int argc, char **argv, struct s_data *data)
 		}
 		i++;
 	}
-	data->dead = 0;
-	data->number_of_philosophers = ft_atoi(argv[1]);
-	data->time_to_die = ft_atoi(argv[2]);
-	data->time_to_eat = ft_atoi(argv[3]);
-	data->time_to_sleep = ft_atoi(argv[4]);
-	if (argv[5])
-	data->meals_total = ft_atoi(argv[5]);
-	if (init_philo(data))
+	init_d(d, argv);
+	if (init_philo(d))
 		return (-1);
-	if (init_forks(data) != 0)
+	if (init_forks(d) != 0)
 		return (-1);
 	return (0);
 }

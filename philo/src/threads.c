@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:58 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:45:17 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,26 @@
 
 void	*death_thread(void *val)
 {
-	struct s_data	*data;
+	struct s_data	*d;
 	int				i;
 
-	data = (struct s_data *)val;
-	while (!death_check(data))
+	d = (struct s_data *)val;
+	while (!death_check(d))
 	{
 		i = 0;
-		while (i < data->number_of_philosophers - 1)
+		while (i < d->p_qty - 1)
 		{
-			if (data->philo_arr[i].time_to_live < time_cl())
+			if (d->p_arr[i].time_to_live < time_cl())
 			{
-				data->dead++;
-				pthread_mutex_lock(&data->mprint);
-				if (data->dead == 1)
-					printf ("%5ld %d died\n", time_cl() - data->time_start_long, i + 1);
-				pthread_mutex_unlock(&data->mprint);
+				d->dead++;
+				pthread_mutex_lock(&d->mprint);
+				if (d->dead == 1)
+					printf ("%5ld %d died\n", time_cl() - d->time_start, i + 1);
+				pthread_mutex_unlock(&d->mprint);
 			}
 			i++;
 		}
-		pthread_mutex_unlock(&data->mdeath);
+		pthread_mutex_unlock(&d->mdeath);
 		usleep(50);
 	}
 	return (NULL);
@@ -44,37 +44,38 @@ void	*ft_phil_routine(void *val)
 	struct s_philosopher	*philo;
 
 	philo = (struct s_philosopher *)val;
-	while (philo->eat_count != 0 && !death_check(philo->data))
+	while (philo->eat_count != 0 && !death_check(philo->d))
 	{
 		ft_eat(philo);
 		philo->eat_count--;
-		if (death_check(philo->data))
+		if (death_check(philo->d))
 			return (NULL);
 		ft_sleep(philo);
-		if (death_check(philo->data))
+		if (death_check(philo->d))
 			return (NULL);
 		ft_think(philo);
-		if (death_check(philo->data))
+		if (death_check(philo->d))
 			return (NULL);
 	}
 	return (NULL);
 }
 
-int	init_tarr(struct s_data *data)
+int	init_tarr(struct s_data *d)
 {
 	int	i;
 
 	i = 0;
-	while (i < data->number_of_philosophers)
+	while (i < d->p_qty)
 	{
-		if (pthread_create(&data->tarr[i], NULL, &ft_phil_routine, &data->philo_arr[i]) != 0)
+		if (pthread_create(&d->tarr[i], NULL,
+				&ft_phil_routine, &d->p_arr[i]) != 0)
 		{
 			perror("thread creation fails!\n");
 			return (1);
 		}
 		i++;
 	}
-	if (pthread_create(&data->tarr[201], NULL, &death_thread, data) != 0)
+	if (pthread_create(&d->tarr[201], NULL, &death_thread, d) != 0)
 	{
 		perror("thread creation fails!\n");
 		return (1);
