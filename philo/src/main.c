@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:50 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 22:34:58 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/15 18:46:31 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ long	time_cl(void)
 	struct timeval	current;
 
 	gettimeofday(&current, NULL);
-	return ((current.tv_sec) * 1000 + (current.tv_usec) / 1000);
+	return (current.tv_sec * 1000 + current.tv_usec / 1000);
 }
 
 int	time_print_diff(struct s_philosopher *philo, int action)
@@ -30,21 +30,21 @@ int	time_print_diff(struct s_philosopher *philo, int action)
 		pthread_mutex_unlock(&philo->d->mprint);
 		return (1);
 	}
-	printf ("%5ld", time_cl() - philo->d->time_start);
+	printf ("%ld", time_cl() - philo->d->time_start);
 	if (action == 101)
-		printf(" %d has taken a fork\n", philo->index);
+		printf(" %d has taken a fork\n", philo->indx);
 	if (action == 102)
-		printf(" %d has taken a fork\n", philo->index);
+		printf(" %d has taken a fork\n", philo->indx);
 	if (action == 10)
-		printf(" %d is eating\n", philo->index);
+		printf(" %d is eating\n", philo->indx);
 	if (action == 11)
-		printf(" %d stoped eating --\n", philo->index);
+		printf(" %d stoped eating --\n", philo->indx);
 	if (action == 20)
-		printf(" %d is sleeping\n", philo->index);
+		printf(" %d is sleeping\n", philo->indx);
 	if (action == 21)
-		printf(" %d stoppped sleeping\n", philo->index);
+		printf(" %d stoppped sleeping\n", philo->indx);
 	if (action == 3)
-		printf(" %d is thinking\n", philo->index);
+		printf(" %d is thinking\n", philo->indx);
 	pthread_mutex_unlock(&philo->d->mprint);
 	return (0);
 }
@@ -62,28 +62,20 @@ void	csleep(int ms, struct s_philosopher *philo)
 
 int	main(int argc, char **argv)
 {
-	struct s_philosopher	phil[222];
-	pthread_t				tarr[222];
-	pthread_mutex_t			mforks[222];
-	struct s_data			d;
+	struct s_data	d;
 
-	d.p_arr = &phil[0];
-	d.tarr = &tarr[0];
-	d.mforks = &mforks[0];
-	pthread_mutex_init(&d.mprint, NULL);
-	pthread_mutex_init(&d.mdeath, NULL);
-	if (init(argc, argv, &d) != 0)
+	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200)
+		return (write(2, "Wrong arguments!\n", 17));
+	if (init(argv, &d, 1) != 0)
 		return (-1);
-	if (d.p_qty == 1)
+	if (ft_atoi(argv[1]) == 1)
 	{
 		printf("0 1 has taken a fork\n");
-		usleep(d.time_to_die * 1000);
-		printf("%d 1 died\n", d.time_to_die);
+		usleep(ft_atoi(argv[2]) * 1000);
+		printf("%d 1 died\n", ft_atoi(argv[2]));
 		return (0);
 	}
 	init_tarr(&d);
-	if (d.p_qty < 1)
-		return (write(2, "Wrong arguments!\n", 17));
 	cleaning(&d, 0);
 	return (0);
 }

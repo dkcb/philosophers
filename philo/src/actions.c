@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:14 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/14 21:54:28 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/15 18:57:27 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,30 @@
 
 int	ft_eat(struct s_philosopher *philo)
 {
-	usleep ((philo->index + 1) % 2 * 200);
-	pthread_mutex_lock(&philo->d->mforks[philo->index - 1]);
+	usleep ((philo->indx + 1) % 2 * philo->d->time_to_eat * 10);
+	pthread_mutex_lock(&philo->d->mforks[philo->indx - 1]);
 	if (death_check(philo->d))
 	{
-		pthread_mutex_unlock(&philo->d->mforks[philo->index - 1]);
+		pthread_mutex_unlock(&philo->d->mforks[philo->indx - 1]);
 		return (-1);
 	}
 	time_print_diff(philo, FORK1);
-	pthread_mutex_lock(&philo->d->mforks[philo->index % philo->d->p_qty]);
+	pthread_mutex_lock(&philo->d->mforks[philo->indx % philo->d->p_tot]);
 	if (death_check(philo->d))
 	{
-		pthread_mutex_unlock(&philo->d->mforks[philo->index - 1]);
-		pthread_mutex_unlock(&philo->d->mforks[philo->index % philo->d->p_qty]);
+		pthread_mutex_unlock(&philo->d->mforks[philo->indx - 1]);
+		pthread_mutex_unlock(&philo->d->mforks[philo->indx % philo->d->p_tot]);
 		return (-1);
 	}
 	time_print_diff(philo, FORK2);
 	time_print_diff(philo, EATING);
 	pthread_mutex_lock(&philo->d->mdeath);
 	philo->time_to_live = time_cl() + philo->d->time_to_die;
+	philo->eat_count--;
 	pthread_mutex_unlock(&philo->d->mdeath);
 	csleep(philo->d->time_to_eat, philo);
-	pthread_mutex_unlock(&philo->d->mforks[philo->index - 1]);
-	pthread_mutex_unlock(&philo->d->mforks[philo->index % philo->d->p_qty]);
+	pthread_mutex_unlock(&philo->d->mforks[philo->indx - 1]);
+	pthread_mutex_unlock(&philo->d->mforks[philo->indx % philo->d->p_tot]);
 	return (1);
 }
 
