@@ -6,7 +6,7 @@
 /*   By: dkocob <dkocob@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/14 21:24:50 by dkocob        #+#    #+#                 */
-/*   Updated: 2022/12/15 18:46:31 by dkocob        ########   odam.nl         */
+/*   Updated: 2022/12/19 15:04:52 by dkocob        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ int	main(int argc, char **argv)
 {
 	struct s_data	d;
 
-	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200)
+	if (argc < 5 || argc > 6 || ft_atoi(argv[1]) > 200 || ft_atoi(argv[1]) < 1
+		|| ft_atoi(argv[2]) < 1 || ft_atoi(argv[3]) < 1
+		|| ft_atoi(argv[4]) < 1)
 		return (write(2, "Wrong arguments!\n", 17));
 	if (init(argv, &d, 1) != 0)
 		return (-1);
